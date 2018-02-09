@@ -54,20 +54,14 @@ category_names['subjet2_tracks'] = category_names['subjet1_tracks']
 # Merges many hdf5 files into one
 path = "/baldig/physicsprojects/atlas/hbb/raw_data/v_6/"
 
-if sys.argv[1] == 'signal':
-    signal = True
-elif sys.argv[1] == 'bg':
-    signal = False
-elif sys.argv[1] == 'other':
-    signal = False
-else:
-    assert 1==0, "please specify signal or bg"
+tag = sys.argv[1]
+assert tag is not None, "please specify a tag (signal, bg, other)"
 
-if signal:
-    new_file_dataset_name = "temporary_flattened_data_signal.h5"
+new_file_dataset_name = "temporary_flattened_data_%s.h5"%tag
+
+if tag == "signal":
     round_down = 1.0 # This is in case you want to use only a percentage of the samples in each file, default is to use all (1.0) 
 else:
-    new_file_dataset_name = "temporary_flattened_data_bg.h5"
     round_down = 10.0 
 
 feature_names = [u'fat_jet', u'subjet1', u'subjet2', u'subjet1_tracks', u'subjet2_tracks']
@@ -76,11 +70,11 @@ feature_names = [u'fat_jet', u'subjet1', u'subjet2', u'subjet1_tracks', u'subjet
 file_list_s = []
 file_list_bg = []
              
-if sys.argv[1] == 'signal':
+if tag == 'signal':
     file_list = file_list_s
-elif sys.argv[1] == 'bg':
+elif tag == 'bg':
     file_list = file_list_bg
-elif sys.argv[1] == 'other':
+elif tag == 'other':
     file_list = ['output.h5']
 
 f_names = []
