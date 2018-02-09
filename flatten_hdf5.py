@@ -22,30 +22,37 @@ def save_index_conversion(file_name, original_indexes, merged_file_indexes, new_
     np.save(path+"new_to_original_%s" % sys.argv[1], new_to_original)
 
 category_names = {}
-category_names['jets'] = ('pt',  'eta',  'weight', 'mass', 'tau21',
-                          'c1',   'c2',   'c1_beta2', 'c2_beta2', 
-                          'd2',   'd2_beta2')
-category_names['clusters'] = ('pt', 'deta', 'dphi', 'energy', 'mask')
-category_names['subjet1'] = ('pt', 'eta', 
-                              'ip3d_ntrk', 'ip2d_pu', 'ip2d_pc', 'ip2d_pb', 'ip3d_pu', 'ip3d_pc', 'ip3d_pb',
-                              'mu_dR', 'mu_mombalsignif', 'mu_d0', 'mu_pTrel', 'mu_qOverPratio', 'mu_scatneighsignif',
-                              'mv2c10',
-                              'jf_dr', 'jf_efc', 'jf_m', 'jf_n2t', 'jf_ntrkAtVx', 'jf_nvtx', 'jf_nvtx1t', 'jf_sig3d', 'jf_deta', 'jf_dphi',
-                              'sv1_dR', 'sv1_efc', 'sv1_Lxyz', 'sv1_Lxy', 'sv1_m', 'sv1_n2t', 'sv1_ntrkv', 'sv1_normdist',
-                              'truthflav', 'LabDr_HadF',
-                              'dphi_fatjet', 'deta_fatjet', 'dr_fatjet',
-                              'mask')
+category_names['fat_jet'] = ('Split12', 'Split23', 'Qw', 'PlanarFlow', 'Angularity', 'Aplanarity', 'ZCut12', 'KtDR', 
+                             'pt', 'eta', 'mass', 
+                             'C2', 'D2', 'e3', 
+                             'Tau21_wta', 'Tau32_wta', 'FoxWolfram20')
+#category_names['clusters'] = ('pt', 'deta', 'dphi', 'energy', 'mask')
+category_names['subjet1'] = ('MV2c10_discriminant', 
+                             'DL1_pb', 'DL1_pc', 'DL1_pu', 
+                             'IP2D_pb', 'IP2D_pc', 'IP2D_pu', 
+                             'IP3D_pb', 'IP3D_pc', 'IP3D_pu', 
+                             'SV1_pu', 'SV1_pb', 'SV1_pc', 
+                             'rnnip_pu', 'rnnip_pc', 'rnnip_pb', 'rnnip_ptau', 
+                             'JetFitter_energyFraction', 'JetFitter_mass', 'JetFitter_significance3d', 
+                             'JetFitter_deltaphi', 'JetFitter_deltaeta', 'JetFitter_massUncorr', 'JetFitter_dRFlightDir', 
+                             'SV1_masssvx', 'SV1_efracsvx', 'SV1_significance3d', 'SV1_dstToMatLay', 'SV1_deltaR', 'SV1_Lxy', 'SV1_L3d', 
+                             'JetFitter_nVTX', 'JetFitter_nSingleTracks', 'JetFitter_nTracksAtVtx', 'JetFitter_N2Tpair', 
+                             'SV1_N2Tpair', 'SV1_NGTinSvx', 
+                             'GhostBHadronsFinalCount', 'GhostCHadronsFinalCount', 
+                             'HadronConeExclTruthLabelID', 'HadronConeExclExtendedTruthLabelID', 
+                             'pt', 'eta', 'deta', 'dphi', 'dr')
 category_names['subjet2'] = category_names['subjet1']
-category_names['subjet3'] = category_names['subjet1']
-category_names['tracks'] = ('pt', 'deta', 'dphi', 'dr', 'ptfrac', 'd0', 'z0', 'd0sig', 'z0sig', 'd0_ls', 'z0_ls', 'd0sig_ls', 'z0sig_ls', 'chi2', 'ndf',
-                             'numberOfInnermostPixelLayerHits', 'numberOfNextToInnermostPixelLayerHits', 'numberOfBLayerHits', 'numberOfBLayerSharedHits',
-                             'numberOfBLayerSplitHits', 'numberOfPixelHits', 'numberOfPixelHoles', 'numberOfPixelSharedHits',
-                             'numberOfPixelSplitHits', 'numberOfSCTHits', 'numberOfSCTHoles', 'numberOfSCTSharedHits',
-                             'expectBLayerHit', 'mask')
+category_names['subjet1_tracks'] = ('chiSquared', 'numberDoF', 
+                                    'btag_ip_d0', 'btag_ip_z0', 'btag_ip_d0_sigma', 'btag_ip_z0_sigma', 
+                                    'numberOfInnermostPixelLayerHits', 'numberOfNextToInnermostPixelLayerHits', 'numberOfPixelHits', 
+                                    'numberOfPixelHoles', 'numberOfPixelSharedHits', 'numberOfPixelSplitHits', 'numberOfSCTHits', 
+                                    'numberOfSCTHoles', 'numberOfSCTSharedHits', 
+                                    'pt', 'eta', 'deta', 'dphi', 'dr', 'ptfrac')
+category_names['subjet2_tracks'] = category_names['subjet1_tracks']
 
 
 # Merges many hdf5 files into one
-path = "/baldig/physicsprojects/atlas/hbb/raw_data/v_5/"
+path = "/baldig/physicsprojects/atlas/hbb/raw_data/v_6/"
 
 if sys.argv[1] == 'signal':
     signal = True
