@@ -24,13 +24,12 @@ for dataset_name in dataset_names:
     data = load_f.get(dataset_name)
     save_data = save_f.get(dataset_name)
     N = data.shape[0]
-    new_sizes = {u'clusters': (N, 5, 60),
-                 u'jets': (N, 11),
-                 u'subjet1': (N, 40),
-                 u'subjet2': (N, 40),
-                 u'subjet3': (N, 40),
-                 u'tracks': (N, 29, 60),
-                }   
+    new_sizes = {u'fat_jet': (N, 17),
+                     u'subjet1': (N, 46),
+                     u'subjet2': (N, 46),
+                     u'subjet1_tracks': (N, 21, 10), # 10 tracks each with 21 variables
+                     u'subjet2_tracks': (N, 21, 10),
+                    }  
     if save_data is None:
         save_data = save_f.create_dataset("%s"%(dataset_name), new_sizes[dataset_name], dtype='f')
     assert data.shape[0] == save_data.shape[0]
