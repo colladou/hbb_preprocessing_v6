@@ -5,22 +5,14 @@ import h5py
 import sys
 
 
-path = "/baldig/physicsprojects/atlas/hbb/raw_data/v_5/"
+path = "/baldig/physicsprojects/atlas/hbb/raw_data/v_6/"
 
-if sys.argv[1] == 'signal':
-    signal = True
-elif sys.argv[1] == 'bg':
-    signal = False
-else:
-    assert 1==0, "please specify signal or bg"
+tag = sys.argv[1]
 
-if signal:
-    load_file_name = 'temporary_flattened_data_signal.h5'
-    save_file_name = "temporary_flattened_shuffled_data_signal.h5" 
-else:
-    load_file_name = 'temporary_flattened_data_bg.h5'
-    save_file_name = "temporary_flattened_shuffled_data_bg.h5"
+assert tag is not None, "Please specify a tag (signal, bg, other)"
 
+load_file_name = 'temporary_flattened_data_%s.h5'%tag
+save_file_name = "temporary_flattened_shuffled_data_%s.h5"%tag 
 
 load_f = h5py.File(path+load_file_name, 'r')
 save_f = h5py.File(path+save_file_name, 'a')
