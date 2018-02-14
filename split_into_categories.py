@@ -37,14 +37,14 @@ def get_names():
                                  'rnnip_pb', 'rnnip_pc', 'rnnip_ptau', 'rnnip_pu'
                                 )
     category_names['subjet2'] = category_names['subjet1']
-    category_names['tracks'] = ('btag_ip_d0', 'btag_ip_d0_sigma', 'btag_ip_z0', 'btag_ip_z0_sigma',
+    category_names['subjet1_tracks'] = ('btag_ip_d0', 'btag_ip_d0_sigma', 'btag_ip_z0', 'btag_ip_z0_sigma',
                                 'chiSquared', 'deta', 'dphi', 'dr', 'eta',
                                 'numberDoF', 'numberOfInnermostPixelLayerHits',
                                 'numberOfNextToInnermostPixelLayerHits', 'numberOfPixelHits',
                                 'numberOfPixelHoles', 'numberOfPixelSharedHits', 'numberOfPixelSplitHits',
                                 'numberOfSCTHits', 'numberOfSCTHoles', 'numberOfSCTSharedHits',
                                 'pt', 'ptfrac')
-                               
+    category_names['subjet2_tracks'] = category_names['subjet1_tracks']                          
     return category_names
 
 def get_position_indexes_from_names(feature_names):
