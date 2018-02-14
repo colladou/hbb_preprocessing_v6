@@ -15,7 +15,7 @@ def round_number(x, batch_size=100):
 def calculate_set_divisions(total_samples, split_vector, batch_size):
     start = 0
     set_divisions = {}
-    for name in ['test', 'train', 'valid']:  # change the order of the sets here for cross validation
+    for name in ['valid', 'test', 'train']:  # change the order of the sets here for cross validation
         num_samples = round_number(split_vector[name]*total_samples, batch_size)
         set_start = start
         set_end = start + num_samples
