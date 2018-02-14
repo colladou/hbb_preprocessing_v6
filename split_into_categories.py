@@ -16,26 +16,35 @@ def create_dataset(open_file, feature_name, shape):
 def get_names():
     # True names to use from each category. This is in order to prevent using Truth variables and enforce an order in the variables
     category_names = {}
-    category_names['jets'] = ('pt',  'eta',  'mass', 
+    category_names['fat_jet'] = ('pt',  'eta',  'mass', 
                               'Angularity', 'Aplanarity', 'C2', 'D2', 'FoxWolfram20',
                               'KtDR', 'Qw', 'PlanarFlow', 'Split12', 'Split23',
                               'Tau21_wta', 'Tau32_wta', 
                               'ZCut12', 'e3')
-    category_names['subjet1'] = ('pt', 'eta', 
-                              'ip3d_ntrk', 'ip2d_pu', 'ip2d_pc', 'ip2d_pb', 'ip3d_pu', 'ip3d_pc', 'ip3d_pb',
-                              'mu_dR', 'mu_mombalsignif', 'mu_d0', 'mu_pTrel', 'mu_qOverPratio', 'mu_scatneighsignif',
-                              'mv2c10',
-                              'jf_dr', 'jf_efc', 'jf_m', 'jf_n2t', 'jf_ntrkAtVx', 'jf_nvtx', 'jf_nvtx1t', 'jf_sig3d', 'jf_deta', 'jf_dphi',
-                              'sv1_dR', 'sv1_efc', 'sv1_Lxyz', 'sv1_Lxy', 'sv1_m', 'sv1_n2t', 'sv1_ntrkv', 'sv1_normdist',
-                              'truthflav', 'LabDr_HadF',
-                              'dphi_fatjet', 'deta_fatjet', 'dr_fatjet',
-                              'mask')
+    category_names['subjet1'] = (#'DL1_pb', 'DL1_pc', 'DL1_pu',
+                                 'IP2D_pb', 'IP2D_pc', 'IP2D_pu', 'IP3D_pb', 'IP3D_pc', 'IP3D_pu',
+                                 'JetFitter_N2Tpair', 'JetFitter_dRFlightDir', 'JetFitter_deltaeta',
+                                 'JetFitter_deltaphi', 'JetFitter_energyFraction', 'JetFitter_mass', 'JetFitter_massUncorr',
+                                 'JetFitter_nSingleTracks', 'JetFitter_nTracksAtVtx', 'JetFitter_nVTX', 'JetFitter_significance3d',
+                                 #'MV2c10_discriminant',
+                                 'SV1_L3d', 'SV1_Lxy',
+                                 'SV1_N2Tpair', 'SV1_NGTinSvx',
+                                 'SV1_deltaR', 'SV1_dstToMatLay',
+                                 'SV1_efracsvx', 'SV1_masssvx',
+                                 'SV1_pb', 'SV1_pc', 'SV1_pu', 'SV1_significance3d',
+                                 'deta', 'dphi', 'dr',
+                                 'eta', 'pt',
+                                 'rnnip_pb', 'rnnip_pc', 'rnnip_ptau', 'rnnip_pu'
+                                )
     category_names['subjet2'] = category_names['subjet1']
-    category_names['tracks'] = ('pt', 'deta', 'dphi', 'dr', 'ptfrac', 'd0', 'z0', 'd0sig', 'z0sig', 'd0_ls', 'z0_ls', 'd0sig_ls', 'z0sig_ls', 'chi2', 'ndf',
-                             'numberOfInnermostPixelLayerHits', 'numberOfNextToInnermostPixelLayerHits', 'numberOfBLayerHits', 'numberOfBLayerSharedHits',
-                             'numberOfBLayerSplitHits', 'numberOfPixelHits', 'numberOfPixelHoles', 'numberOfPixelSharedHits',
-                             'numberOfPixelSplitHits', 'numberOfSCTHits', 'numberOfSCTHoles', 'numberOfSCTSharedHits',
-                             'expectBLayerHit', 'mask')
+    category_names['tracks'] = ('btag_ip_d0', 'btag_ip_d0_sigma', 'btag_ip_z0', 'btag_ip_z0_sigma',
+                                'chiSquared', 'deta', 'dphi', 'dr', 'eta',
+                                'numberDoF', 'numberOfInnermostPixelLayerHits',
+                                'numberOfNextToInnermostPixelLayerHits', 'numberOfPixelHits',
+                                'numberOfPixelHoles', 'numberOfPixelSharedHits', 'numberOfPixelSplitHits',
+                                'numberOfSCTHits', 'numberOfSCTHoles', 'numberOfSCTSharedHits',
+                                'pt', 'ptfrac')
+                               
     return category_names
 
 def get_position_indexes_from_names(feature_names):
