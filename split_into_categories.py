@@ -14,11 +14,13 @@ def create_dataset(open_file, feature_name, shape):
 
 
 def get_names():
+    # True names to use from each category. This is in order to prevent using Truth variables and enforce an order in the variables
     category_names = {}
-    category_names['jets'] = ('pt',  'eta',  'weight', 'mass', 'tau21',
-                          'c1',   'c2',   'c1_beta2', 'c2_beta2', 
-                          'd2',   'd2_beta2')
-    category_names['clusters'] = ('pt', 'deta', 'dphi', 'energy', 'mask')
+    category_names['jets'] = ('pt',  'eta',  'mass', 
+                              'Angularity', 'Aplanarity', 'C2', 'D2', 'FoxWolfram20',
+                              'KtDR', 'Qw', 'PlanarFlow', 'Split12', 'Split23',
+                              'Tau21_wta', 'Tau32_wta', 
+                              'ZCut12', 'e3')
     category_names['subjet1'] = ('pt', 'eta', 
                               'ip3d_ntrk', 'ip2d_pu', 'ip2d_pc', 'ip2d_pb', 'ip3d_pu', 'ip3d_pc', 'ip3d_pb',
                               'mu_dR', 'mu_mombalsignif', 'mu_d0', 'mu_pTrel', 'mu_qOverPratio', 'mu_scatneighsignif',
@@ -29,7 +31,6 @@ def get_names():
                               'dphi_fatjet', 'deta_fatjet', 'dr_fatjet',
                               'mask')
     category_names['subjet2'] = category_names['subjet1']
-    category_names['subjet3'] = category_names['subjet1']
     category_names['tracks'] = ('pt', 'deta', 'dphi', 'dr', 'ptfrac', 'd0', 'z0', 'd0sig', 'z0sig', 'd0_ls', 'z0_ls', 'd0sig_ls', 'z0sig_ls', 'chi2', 'ndf',
                              'numberOfInnermostPixelLayerHits', 'numberOfNextToInnermostPixelLayerHits', 'numberOfBLayerHits', 'numberOfBLayerSharedHits',
                              'numberOfBLayerSplitHits', 'numberOfPixelHits', 'numberOfPixelHoles', 'numberOfPixelSharedHits',
