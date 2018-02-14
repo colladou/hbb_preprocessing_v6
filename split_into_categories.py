@@ -21,12 +21,12 @@ def get_names():
                               'KtDR', 'Qw', 'PlanarFlow', 'Split12', 'Split23',
                               'Tau21_wta', 'Tau32_wta', 
                               'ZCut12', 'e3')
-    category_names['subjet1'] = (#'DL1_pb', 'DL1_pc', 'DL1_pu',
+    category_names['subjet1'] = ('DL1_pb', 'DL1_pc', 'DL1_pu',
                                  'IP2D_pb', 'IP2D_pc', 'IP2D_pu', 'IP3D_pb', 'IP3D_pc', 'IP3D_pu',
                                  'JetFitter_N2Tpair', 'JetFitter_dRFlightDir', 'JetFitter_deltaeta',
                                  'JetFitter_deltaphi', 'JetFitter_energyFraction', 'JetFitter_mass', 'JetFitter_massUncorr',
                                  'JetFitter_nSingleTracks', 'JetFitter_nTracksAtVtx', 'JetFitter_nVTX', 'JetFitter_significance3d',
-                                 #'MV2c10_discriminant',
+                                 'MV2c10_discriminant',
                                  'SV1_L3d', 'SV1_Lxy',
                                  'SV1_N2Tpair', 'SV1_NGTinSvx',
                                  'SV1_deltaR', 'SV1_dstToMatLay',
@@ -114,23 +114,28 @@ def merge_2_datasets(data, save_file, feature_name):
 
  
 def create_weights(open_file, save_file, set_type):
-    category_order = ['jets']
+    assert 1==0, "needs to be updated so it makes weights equal to 1 or just not create them" 
+    category_order = ['fat_jet']
     feature_names = {}
-    feature_names['jets'] = ('weight')
+    feature_names['fat_jet'] = ('weight')
     feature_name = 'weights/%s' % set_type
     create_new_feature_subset(open_file, feature_name, set_type, feature_names, category_order)
 
 
 def create_high_level_clusters(open_file, save_file, set_type):
-    category_order = ['jets']
+    category_order = ['fat_jet']
     feature_names = {}
-    feature_names['jets'] = ('pt',  'eta',
-                             'tau21', 'c1', 'c2', 'c1_beta2', 'c2_beta2', 'd2', 'd2_beta2')
+    feature_names['fat_jet'] = ('pt',  'eta', 'mass',
+                                'Angularity', 'Aplanarity', 'C2', 'D2', 'FoxWolfram20',
+                                'KtDR', 'Qw', 'PlanarFlow', 'Split12', 'Split23',
+                                'Tau21_wta', 'Tau32_wta', 
+                                'ZCut12', 'e3')
     feature_name = 'hl_clusters/%s' % set_type
     create_new_feature_subset(open_file, feature_name, set_type, feature_names, category_order)
 
 
 def create_jets(open_file, save_file, set_type):
+    assert 1==0, "make sure you really want to create jets"
     category_order = ['jets']
     feature_names = {}
     feature_names['jets'] = ('pt',  'eta',  'weight', 'mass', 'tau21',
@@ -141,22 +146,28 @@ def create_jets(open_file, save_file, set_type):
 
 
 def create_high_level_tracks(open_file, save_file, set_type):
-    category_order = ['jets', 'subjet1', 'subjet2']
+    category_order = ['fat_jet', 'subjet1', 'subjet2']
     feature_name = 'hl_tracks/%s' % set_type
     feature_names = {}
-    feature_names['jets'] = ('pt',  'eta')
-    feature_names['subjet1'] = ('pt', 'eta',
-                              #'ip3d_ntrk', 
-                              'ip2d_pu', 'ip2d_pc', 'ip2d_pb', 'ip3d_pu', 'ip3d_pc', 'ip3d_pb',
-                              'mu_dR', 'mu_mombalsignif', 'mu_d0', 'mu_pTrel', 'mu_qOverPratio', 'mu_scatneighsignif',
-                              'jf_dr', 'jf_efc', 'jf_m', 'jf_n2t', 'jf_ntrkAtVx', 'jf_nvtx', 'jf_nvtx1t', 'jf_sig3d', 'jf_deta', 'jf_dphi',
-                              'sv1_dR', 'sv1_efc', 'sv1_Lxyz', 'sv1_Lxy', 'sv1_m', 'sv1_n2t', 'sv1_ntrkv', 'sv1_normdist',
-                              # 'dphi_fatjet', 'deta_fatjet', 'dr_fatjet',
-                              'mask')
+    feature_names['fat_jet'] = ('pt',  'eta', 'mass')
+    feature_names['subjet1'] = ('IP2D_pb', 'IP2D_pc', 'IP2D_pu', 'IP3D_pb', 'IP3D_pc', 'IP3D_pu',
+                                 'JetFitter_N2Tpair', 'JetFitter_dRFlightDir', 'JetFitter_deltaeta',
+                                 'JetFitter_deltaphi', 'JetFitter_energyFraction', 'JetFitter_mass', 'JetFitter_massUncorr',
+                                 'JetFitter_nSingleTracks', 'JetFitter_nTracksAtVtx', 'JetFitter_nVTX', 'JetFitter_significance3d',
+                                 'SV1_L3d', 'SV1_Lxy',
+                                 'SV1_N2Tpair', 'SV1_NGTinSvx',
+                                 'SV1_deltaR', 'SV1_dstToMatLay',
+                                 'SV1_efracsvx', 'SV1_masssvx',
+                                 'SV1_pb', 'SV1_pc', 'SV1_pu', 'SV1_significance3d',
+                                 'deta', 'dphi', 'dr',
+                                 'eta', 'pt',
+                                 'rnnip_pb', 'rnnip_pc', 'rnnip_ptau', 'rnnip_pu'
+                               )
     feature_names['subjet2'] = feature_names['subjet1']   
     create_new_feature_subset(open_file, feature_name, set_type, feature_names, category_order)
 
 def create_single_jet_predictions(open_file, save_file, set_type, label_type):
+    assert 1==0, "update this method"
     feature_name = 'single_jet_predictions/%s' % set_type
     data_path = '/home/baldig-projects/julian/atlas/hbb/v_5/single_jet_hl_tracks/50_50/'
     data = np.load(data_path + 'predictions_%s_%s.npy' % (set_type, label_type))
@@ -170,12 +181,20 @@ def create_mv2c10(open_file, save_file, set_type):
     category_order = ['subjet1', 'subjet2']
     feature_name = 'mv2c10/%s' % set_type
     feature_names = {}
-    feature_names['subjet1'] = ('mv2c10')
+    feature_names['subjet1'] = ('MV2c10_discriminant')
     feature_names['subjet2'] = feature_names['subjet1']
     create_new_feature_subset(open_file, feature_name, set_type, feature_names, category_order)
 
+def create_DL1(open_file, save_file, set_type):
+    category_order = ['subjet1', 'subjet2']
+    feature_name = 'dl1/%s' % set_type
+    feature_names = {}
+    feature_names['subjet1'] = ('DL1_pb', 'DL1_pc', 'DL1_pu')
+    feature_names['subjet2'] = feature_names['subjet1']
+    create_new_feature_subset(open_file, feature_name, set_type, feature_names, category_order)
 
 def create_mv2c10_plus(open_file, save_file, set_type):
+    assert 1==0, "update"
     category_order = ['jets', 'subjet1', 'subjet2']
     feature_name = 'mv2c10+/%s' % set_type
     feature_names = {}
