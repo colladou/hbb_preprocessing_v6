@@ -72,8 +72,8 @@ def create_new_feature_subset(open_file, feature_name, set_type, feature_names, 
     num_features = 0 
     for key in feature_names:
         multiplicity = 1
-        if key == 'tracks' or key == 'clusters':
-            multiplicity = 60
+        if key == 'subjet1_tracks' or 'subjet2_tracks':
+            multiplicity = 10
         if feature_names[key].__class__ is tuple:
             num_features += len(feature_names[key])*multiplicity
         else:
