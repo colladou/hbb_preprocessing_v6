@@ -205,25 +205,53 @@ def create_mv2c10_plus(open_file, save_file, set_type):
 
 
 def create_tracks(open_file, save_file, set_type):
-    category_order = ['jets', 'tracks']
+    category_order = ['fat_jet', 'subjet1_tracks', 'subjet2_tracks']
     feature_name = 'tracks/%s' % set_type
     feature_names = {}
-    feature_names['jets'] = ('pt',  'eta')
-    feature_names['tracks'] = ('pt', 'deta', 'dphi', 'dr', 'ptfrac', 
-                               'd0', 'z0', 'd0sig', 'z0sig', 
-                               'd0_ls', 'z0_ls', 'd0sig_ls', 'z0sig_ls', 
-                               'chi2', 'ndf',
-                               'numberOfInnermostPixelLayerHits', 
-                               'numberOfNextToInnermostPixelLayerHits', 'numberOfBLayerHits', 
-                               'numberOfBLayerSharedHits',
-                               'numberOfBLayerSplitHits', 'numberOfPixelHits', 
-                               'numberOfPixelHoles', 'numberOfPixelSharedHits',
-                               'numberOfPixelSplitHits', 'numberOfSCTHits', 
-                               'numberOfSCTHoles', 'numberOfSCTSharedHits',
-                               'expectBLayerHit', 'mask')
+    feature_names['fat_jet'] = ('pt',  'eta', 'mass')
+    feature_names['subjet1_tracks'] = ('btag_ip_d0', 'btag_ip_d0_sigma', 'btag_ip_z0', 'btag_ip_z0_sigma',
+                                       'chiSquared', 'deta', 'dphi', 'dr', 'eta',
+                                       'numberDoF', 'numberOfInnermostPixelLayerHits',
+                                       'numberOfNextToInnermostPixelLayerHits', 'numberOfPixelHits',
+                                       'numberOfPixelHoles', 'numberOfPixelSharedHits', 'numberOfPixelSplitHits',
+                                       'numberOfSCTHits', 'numberOfSCTHoles', 'numberOfSCTSharedHits',
+                                       'pt', 'ptfrac'
+                                      )
+    feature_names['subjet2_tracks'] = feature_names['subjet1_tracks']
+    create_new_feature_subset(open_file, feature_name, set_type, feature_names, category_order)
+
+def create_subjet1_tracks(open_file, save_file, set_type):
+    category_order = ['fat_jet', 'subjet1_tracks']
+    feature_name = 'subjet1_tracks/%s' % set_type
+    feature_names = {}
+    feature_names['fat_jet'] = ('pt',  'eta', 'mass')
+    feature_names['subjet1_tracks'] = ('btag_ip_d0', 'btag_ip_d0_sigma', 'btag_ip_z0', 'btag_ip_z0_sigma',
+                                       'chiSquared', 'deta', 'dphi', 'dr', 'eta',
+                                       'numberDoF', 'numberOfInnermostPixelLayerHits',
+                                       'numberOfNextToInnermostPixelLayerHits', 'numberOfPixelHits',
+                                       'numberOfPixelHoles', 'numberOfPixelSharedHits', 'numberOfPixelSplitHits',
+                                       'numberOfSCTHits', 'numberOfSCTHoles', 'numberOfSCTSharedHits',
+                                       'pt', 'ptfrac'
+                                      )
+    create_new_feature_subset(open_file, feature_name, set_type, feature_names, category_order)
+
+def create_subjet2_tracks(open_file, save_file, set_type):
+    category_order = ['fat_jet', 'subjet2_tracks']
+    feature_name = 'subjet2_tracks/%s' % set_type
+    feature_names = {}
+    feature_names['fat_jet'] = ('pt',  'eta', 'mass')
+    feature_names['subjet2_tracks'] = ('btag_ip_d0', 'btag_ip_d0_sigma', 'btag_ip_z0', 'btag_ip_z0_sigma',
+                                       'chiSquared', 'deta', 'dphi', 'dr', 'eta',
+                                       'numberDoF', 'numberOfInnermostPixelLayerHits',
+                                       'numberOfNextToInnermostPixelLayerHits', 'numberOfPixelHits',
+                                       'numberOfPixelHoles', 'numberOfPixelSharedHits', 'numberOfPixelSplitHits',
+                                       'numberOfSCTHits', 'numberOfSCTHoles', 'numberOfSCTSharedHits',
+                                       'pt', 'ptfrac'
+                                      )
     create_new_feature_subset(open_file, feature_name, set_type, feature_names, category_order)
 
 def create_clusters(open_file, save_file, set_type):
+    assert 1==0, "no need for this method, there are no clusters"
     category_order = ['jets', 'clusters']
     feature_name = 'clusters/%s' % set_type
     feature_names = {}
@@ -243,6 +271,7 @@ def create_high(open_file, save_file, set_type):
 
 
 def create_low(open_file, save_file, set_type):
+    assert 1==0, "no need for this method since there are no clusters"
     feature_name = 'low/%s' % set_type 
     data_1 = open_file.get('clusters/%s' % set_type)
     data_2 = open_file.get('tracks/%s' % set_type)
@@ -253,6 +282,7 @@ def create_low(open_file, save_file, set_type):
 
 
 def create_clusters_and_hl_clusters(open_file, save_file, set_type):
+    assert 1==0, "no need for this method since there are no clusters"
     feature_name = 'clusters_and_hl_clusters/%s' % set_type
     data_1 = open_file.get('clusters/%s' % set_type)
     data_2 = open_file.get('hl_clusters/%s' % set_type)
@@ -273,7 +303,7 @@ def create_tracks_and_hl_tracks(open_file, save_file, set_type):
 
 def create_all(open_file, save_file, set_type):
     feature_name = 'all/%s' % set_type
-    data_1 = open_file.get('clusters_and_hl_clusters/%s' % set_type)
+    data_1 = open_file.get('hl_clusters/%s' % set_type)
     data_2 = open_file.get('tracks_and_hl_tracks/%s' % set_type)
     assert data_1 is not None
     assert data_2 is not None
