@@ -72,13 +72,13 @@ def create_new_feature_subset(open_file, feature_name, set_type, feature_names, 
     num_features = 0 
     for key in feature_names:
         multiplicity = 1
-        if key == 'subjet1_tracks' or 'subjet2_tracks':
+        if key == 'subjet1_tracks' or key == 'subjet2_tracks':
             multiplicity = 10
         if feature_names[key].__class__ is tuple:
             num_features += len(feature_names[key])*multiplicity
         else:
             num_features += 1 * multiplicity
-    print(num_features)
+    print('num_features', num_features)
     save_data = create_dataset(save_file, feature_name, (num_samples, num_features))
 
     position_indexes = get_position_indexes_from_names(feature_names)    
@@ -93,7 +93,7 @@ def create_new_feature_subset(open_file, feature_name, set_type, feature_names, 
         else:
             total_sub_selection_length += len(element)
     assert total_sub_selection_length == save_data.shape[1], [total_sub_selection_length, save_data.shape[1]]
-    print(sub_selection)
+    print('sub_selection', sub_selection)
     copy_in_batches(data, save_data, sub_selection)       
 
 
@@ -114,13 +114,32 @@ def merge_2_datasets(data, save_file, feature_name):
 
  
 def create_weights(open_file, save_file, set_type):
-    assert 1==0, "needs to be updated so it makes weights equal to 1 or just not create them" 
+    print("WARNING: MAKING ALL WEIGHTS EQUAL TO ONE")
     category_order = ['fat_jet']
     feature_names = {}
-    feature_names['fat_jet'] = ('weight')
+    feature_names['fat_jet'] = ('pt')
     feature_name = 'weights/%s' % set_type
+    assert 1==0
+
+    data = open_file.get('%s/%s' % ('fat_jet', set_type))
+    assert data is not None
+    num_samples = data.shape[0]
+    num_features = 1
+    save_data = create_dataset(save_file, feature_name, (num_samples, num_features))
+    
+
     create_new_feature_subset(open_file, feature_name, set_type, feature_names, category_order)
 
+def create_fat_jet(open_file, save_file, set_type):
+    category_order = ['fat_jet']
+    feature_names = {}
+    feature_names['fat_jet'] = ('pt',  'eta',  'mass',
+                              'Angularity', 'Aplanarity', 'C2', 'D2', 'FoxWolfram20',
+                              'KtDR', 'Qw', 'PlanarFlow', 'Split12', 'Split23',
+                              'Tau21_wta', 'Tau32_wta',
+                              'ZCut12', 'e3')
+    feature_name = 'fat_jet/%s' % set_type
+    create_new_feature_subset(open_file, feature_name, set_type, feature_names, category_order)
 
 def create_high_level_clusters(open_file, save_file, set_type):
     category_order = ['fat_jet']
@@ -134,16 +153,43 @@ def create_high_level_clusters(open_file, save_file, set_type):
     create_new_feature_subset(open_file, feature_name, set_type, feature_names, category_order)
 
 
-def create_jets(open_file, save_file, set_type):
-    assert 1==0, "make sure you really want to create jets"
-    category_order = ['jets']
+def create_subjet1(open_file, save_file, set_type):
+    category_order = ['subjet1']
     feature_names = {}
-    feature_names['jets'] = ('pt',  'eta',  'weight', 'mass', 'tau21',
-                             'c1',   'c2',   'c1_beta2', 'c2_beta2', 
-                             'd2',   'd2_beta2')
-    feature_name = 'jets/%s' % set_type
+    feature_names['subjet1'] = ('IP2D_pb', 'IP2D_pc', 'IP2D_pu', 'IP3D_pb', 'IP3D_pc', 'IP3D_pu',
+                                 'JetFitter_N2Tpair', 'JetFitter_dRFlightDir', 'JetFitter_deltaeta',
+                                 'JetFitter_deltaphi', 'JetFitter_energyFraction', 'JetFitter_mass', 'JetFitter_massUncorr',
+                                 'JetFitter_nSingleTracks', 'JetFitter_nTracksAtVtx', 'JetFitter_nVTX', 'JetFitter_significance3d',
+                                 'SV1_L3d', 'SV1_Lxy',
+                                 'SV1_N2Tpair', 'SV1_NGTinSvx',
+                                 'SV1_deltaR', 'SV1_dstToMatLay',
+                                 'SV1_efracsvx', 'SV1_masssvx',
+                                 'SV1_pb', 'SV1_pc', 'SV1_pu', 'SV1_significance3d',
+                                 'deta', 'dphi', 'dr',
+                                 'eta', 'pt',
+                                 'rnnip_pb', 'rnnip_pc', 'rnnip_ptau', 'rnnip_pu'
+                               )
+    feature_name = 'subjet1/%s' % set_type
     create_new_feature_subset(open_file, feature_name, set_type, feature_names, category_order)
 
+def create_subjet2(open_file, save_file, set_type):
+    category_order = ['subjet2']
+    feature_names = {}
+    feature_names['subjet2'] = ('IP2D_pb', 'IP2D_pc', 'IP2D_pu', 'IP3D_pb', 'IP3D_pc', 'IP3D_pu',
+                                 'JetFitter_N2Tpair', 'JetFitter_dRFlightDir', 'JetFitter_deltaeta',
+                                 'JetFitter_deltaphi', 'JetFitter_energyFraction', 'JetFitter_mass', 'JetFitter_massUncorr',
+                                 'JetFitter_nSingleTracks', 'JetFitter_nTracksAtVtx', 'JetFitter_nVTX', 'JetFitter_significance3d',
+                                 'SV1_L3d', 'SV1_Lxy',
+                                 'SV1_N2Tpair', 'SV1_NGTinSvx',
+                                 'SV1_deltaR', 'SV1_dstToMatLay',
+                                 'SV1_efracsvx', 'SV1_masssvx',
+                                 'SV1_pb', 'SV1_pc', 'SV1_pu', 'SV1_significance3d',
+                                 'deta', 'dphi', 'dr',
+                                 'eta', 'pt',
+                                 'rnnip_pb', 'rnnip_pc', 'rnnip_ptau', 'rnnip_pu'
+                               )
+    feature_name = 'subjet2/%s' % set_type
+    create_new_feature_subset(open_file, feature_name, set_type, feature_names, category_order)
 
 def create_high_level_tracks(open_file, save_file, set_type):
     category_order = ['fat_jet', 'subjet1', 'subjet2']
@@ -391,6 +437,9 @@ def copy_in_batches(data, save_data, sub_selection):
 
 if __name__ == "__main__":
     file_path = "/baldig/physicsprojects/atlas/hbb/raw_data/v_6/"
+    if sys.argv[1] is None:
+        assert 1==0, "Please specify a mode of processing (signal, bg, other)"
+
     if sys.argv[1] == 'signal':
         load_name = "temporary_flattened_shuffled_divided_data_signal.h5"
         save_name = "categorized_data_signal_test_valid_train.h5"
@@ -404,6 +453,9 @@ if __name__ == "__main__":
         load_name = "temporary_flattened_shuffled_divided_data_signal.h5"
         #load_name = "temporary_flattened_shuffled_divided_data_bg.h5"
         save_name = "categorized_data_signal_test_valid_train.h5"
+    elif sys.argv[1] == 'other':
+        load_name = "temporary_flattened_shuffled_divided_data_%s.h5" % 'other'
+        save_name = "categorized_data_%s_test_valid_train.h5" % 'other'
     else:
         assert 1==0, "please specify signal or bg"
 
@@ -429,8 +481,18 @@ if __name__ == "__main__":
    
     for set_type in ['train', 'valid', 'test']:
         print(set_type)
-        print("Splitting weights")
-        create_weights(hf, save_file, set_type)
+        #print("Splitting weights")
+        #create_weights(hf, save_file, set_type)
+        print("Splitting fat_jet")
+        create_fat_jet(hf, save_file, set_type)
+        print("Splitting subjet1")
+        create_subjet1(hf, save_file, set_type)
+        print("Splitting subjet2")
+        create_subjet2(hf, save_file, set_type)
+        print("Splitting subjet1_tracks")
+        create_subjet1_tracks(hf, save_file, set_type)
+        print("Splitting subjet2_tracks")
+        create_subjet2_tracks(hf, save_file, set_type)
         print("Splitting hl clusters")
         create_high_level_clusters(hf, save_file, set_type)
         print("splitting hl tracks")
@@ -439,21 +501,19 @@ if __name__ == "__main__":
         create_mv2c10(hf, save_file, set_type)
         print("splitting tracks")
         create_tracks(hf, save_file, set_type)
-        print("splitting clusters")
-        create_clusters(hf, save_file, set_type)
+        #print("splitting clusters")
+        #create_clusters(hf, save_file, set_type)
         print("splitting high")
         create_high(save_file, save_file, set_type)
-        print("splitting low")
-        create_low(save_file, save_file, set_type)
-        print("splitting clusters_and_hl_clusters")
-        create_clusters_and_hl_clusters(save_file, save_file, set_type)
+        #print("splitting low")
+        #create_low(save_file, save_file, set_type)
+        #print("splitting clusters_and_hl_clusters")
+        #create_clusters_and_hl_clusters(save_file, save_file, set_type)
         print("splitting tracks_and_hl_tracks")
         create_tracks_and_hl_tracks(save_file, save_file, set_type)
         print("splitting all")
         create_all(save_file, save_file, set_type)
-        print("splitting jets")
-        create_jets(hf, save_file, set_type)        
-        print("creating mv2c10+")
-        create_mv2c10_plus(hf, save_file, set_type)
-        print("creating single_jet_predictions")
-        create_single_jet_predictions(hf, save_file, set_type, sys.argv[1])
+        print("splitting DL1")
+        create_DL1(save_file, save_file, set_type)
+
+
