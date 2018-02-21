@@ -23,18 +23,18 @@ def calculate_set_divisions(total_samples, split_vector, batch_size):
         start = set_end
     return set_divisions
 
-load_path = "/baldig/physicsprojects/atlas/hbb/raw_data/v_5/"
+load_path = "/baldig/physicsprojects/atlas/hbb/raw_data/v_6/"
 
-if sys.argv[1] == 'signal':
-    load_and_save_file_names = [["temporary_flattened_shuffled_data_signal.h5", "temporary_flattened_shuffled_divided_data_signal.h5"]]
-elif sys.argv[1] == 'bg':
-    load_and_save_file_names = [["temporary_flattened_shuffled_data_bg.h5", "temporary_flattened_shuffled_divided_data_bg.h5"]]
-else:
-    assert 1==0, "please specify signal or bg"
+assert sys.argv[1] is not None, 'please specify signal or bg'
+
+tag = sys.argv[1]
+
+load_and_save_file_names = [["temporary_flattened_shuffled_data_%s.h5"%tag, "temporary_flattened_shuffled_divided_data_%s.h5"%tag]]
+
 for load_file_name, save_file_name in load_and_save_file_names:
     #split_vector = (0.7, 0.15, 0.15)
-    split_vector = {'train': 0.7, 'valid': 0.15, 'test': 0.15}
-    batch_size=100
+    split_vector = {'train': 0.6, 'valid': 0.2, 'test': 0.2}
+    batch_size=10
 
     load_f = h5py.File(load_path + load_file_name, 'r')
     save_f = h5py.File(load_path + save_file_name, 'a')

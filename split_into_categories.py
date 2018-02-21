@@ -169,7 +169,7 @@ def create_high_level_tracks(open_file, save_file, set_type):
 def create_single_jet_predictions(open_file, save_file, set_type, label_type):
     assert 1==0, "update this method"
     feature_name = 'single_jet_predictions/%s' % set_type
-    data_path = '/home/baldig-projects/julian/atlas/hbb/v_5/single_jet_hl_tracks/50_50/'
+    data_path = '/home/baldig-projects/julian/atlas/hbb/v_6/single_jet_hl_tracks/50_50/'
     data = np.load(data_path + 'predictions_%s_%s.npy' % (set_type, label_type))
     assert data is not None, "could not load data"
     num_samples, num_features = data.shape[0], data.shape[1]
@@ -390,7 +390,7 @@ def copy_in_batches(data, save_data, sub_selection):
             save_data[start:end, :, :] = mini_batch
 
 if __name__ == "__main__":
-    file_path = "/baldig/physicsprojects/atlas/hbb/raw_data/v_5/"
+    file_path = "/baldig/physicsprojects/atlas/hbb/raw_data/v_6/"
     if sys.argv[1] == 'signal':
         load_name = "temporary_flattened_shuffled_divided_data_signal.h5"
         save_name = "categorized_data_signal_test_valid_train.h5"

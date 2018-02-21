@@ -7,9 +7,9 @@ import sys
 
 path = "/baldig/physicsprojects/atlas/hbb/raw_data/v_6/"
 
-tag = sys.argv[1]
+assert sys.argv[1] is not None, "Please specify a tag (signal, bg, other)"
 
-assert tag is not None, "Please specify a tag (signal, bg, other)"
+tag = sys.argv[1]
 
 load_file_name = 'temporary_flattened_data_%s.h5'%tag
 save_file_name = "temporary_flattened_shuffled_data_%s.h5"%tag 
