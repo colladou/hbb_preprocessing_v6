@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 import h5py
 import numpy as np
 import sys
@@ -40,7 +42,7 @@ for load_file_name, save_file_name in load_and_save_file_names:
     save_f = h5py.File(load_path + save_file_name, 'a')
 
     for feature in load_f.keys():
-        print feature
+        print(feature)
         data = load_f.get(feature)
         #size = data.shape
         set_divisions = calculate_set_divisions(data.shape[0], split_vector, batch_size)

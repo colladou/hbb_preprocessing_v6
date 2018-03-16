@@ -37,6 +37,7 @@ def get_names():
                                  'rnnip_pb', 'rnnip_pc', 'rnnip_ptau', 'rnnip_pu'
                                 )
     category_names['subjet2'] = category_names['subjet1']
+    category_names['subjet3'] = category_names['subjet1']
     category_names['subjet1_tracks'] = ('btag_ip_d0', 'btag_ip_d0_sigma', 'btag_ip_z0', 'btag_ip_z0_sigma',
                                 'chiSquared', 'deta', 'dphi', 'dr', 'eta',
                                 'numberDoF', 'numberOfInnermostPixelLayerHits',
@@ -45,6 +46,7 @@ def get_names():
                                 'numberOfSCTHits', 'numberOfSCTHoles', 'numberOfSCTSharedHits',
                                 'pt', 'ptfrac')
     category_names['subjet2_tracks'] = category_names['subjet1_tracks']                          
+    category_names['subjet3_tracks'] = category_names['subjet1_tracks']
     return category_names
 
 def get_position_indexes_from_names(feature_names):
@@ -72,7 +74,7 @@ def create_new_feature_subset(open_file, feature_name, set_type, feature_names, 
     num_features = 0 
     for key in feature_names:
         multiplicity = 1
-        if key == 'subjet1_tracks' or key == 'subjet2_tracks':
+        if key == 'subjet1_tracks' or key == 'subjet2_tracks' or key == 'subjet3_tracks':
             multiplicity = 10
         if feature_names[key].__class__ is tuple:
             num_features += len(feature_names[key])*multiplicity
@@ -114,21 +116,15 @@ def merge_2_datasets(data, save_file, feature_name):
 
  
 def create_weights(open_file, save_file, set_type):
-    print("WARNING: MAKING ALL WEIGHTS EQUAL TO ONE")
-    category_order = ['fat_jet']
-    feature_names = {}
-    feature_names['fat_jet'] = ('pt')
+    category_order = ['weight']
     feature_name = 'weights/%s' % set_type
-    assert 1==0
 
-    data = open_file.get('%s/%s' % ('fat_jet', set_type))
+    data = open_file.get('%s/%s' % ('weight', set_type))
     assert data is not None
     num_samples = data.shape[0]
     num_features = 1
     save_data = create_dataset(save_file, feature_name, (num_samples, num_features))
-    
-
-    create_new_feature_subset(open_file, feature_name, set_type, feature_names, category_order)
+    save_data[:] = data[:]
 
 def create_fat_jet(open_file, save_file, set_type):
     category_order = ['fat_jet']
@@ -189,6 +185,25 @@ def create_subjet2(open_file, save_file, set_type):
                                  'rnnip_pb', 'rnnip_pc', 'rnnip_ptau', 'rnnip_pu'
                                )
     feature_name = 'subjet2/%s' % set_type
+    create_new_feature_subset(open_file, feature_name, set_type, feature_names, category_order)
+
+def create_subjet3(open_file, save_file, set_type):
+    category_order = ['subjet3']
+    feature_names = {}
+    feature_names['subjet3'] = ('IP2D_pb', 'IP2D_pc', 'IP2D_pu', 'IP3D_pb', 'IP3D_pc', 'IP3D_pu',
+                                 'JetFitter_N2Tpair', 'JetFitter_dRFlightDir', 'JetFitter_deltaeta',
+                                 'JetFitter_deltaphi', 'JetFitter_energyFraction', 'JetFitter_mass', 'JetFitter_massUncorr',
+                                 'JetFitter_nSingleTracks', 'JetFitter_nTracksAtVtx', 'JetFitter_nVTX', 'JetFitter_significance3d',
+                                 'SV1_L3d', 'SV1_Lxy',
+                                 'SV1_N2Tpair', 'SV1_NGTinSvx',
+                                 'SV1_deltaR', 'SV1_dstToMatLay',
+                                 'SV1_efracsvx', 'SV1_masssvx',
+                                 'SV1_pb', 'SV1_pc', 'SV1_pu', 'SV1_significance3d',
+                                 'deta', 'dphi', 'dr',
+                                 'eta', 'pt',
+                                 'rnnip_pb', 'rnnip_pc', 'rnnip_ptau', 'rnnip_pu'
+                               )   
+    feature_name = 'subjet3/%s' % set_type
     create_new_feature_subset(open_file, feature_name, set_type, feature_names, category_order)
 
 def create_high_level_tracks(open_file, save_file, set_type):
@@ -287,6 +302,21 @@ def create_subjet2_tracks(open_file, save_file, set_type):
     feature_names = {}
     feature_names['fat_jet'] = ('pt',  'eta', 'mass')
     feature_names['subjet2_tracks'] = ('btag_ip_d0', 'btag_ip_d0_sigma', 'btag_ip_z0', 'btag_ip_z0_sigma',
+                                       'chiSquared', 'deta', 'dphi', 'dr', 'eta',
+                                       'numberDoF', 'numberOfInnermostPixelLayerHits',
+                                       'numberOfNextToInnermostPixelLayerHits', 'numberOfPixelHits',
+                                       'numberOfPixelHoles', 'numberOfPixelSharedHits', 'numberOfPixelSplitHits',
+                                       'numberOfSCTHits', 'numberOfSCTHoles', 'numberOfSCTSharedHits',
+                                       'pt', 'ptfrac'
+                                      )
+    create_new_feature_subset(open_file, feature_name, set_type, feature_names, category_order)
+
+def create_subjet3_tracks(open_file, save_file, set_type):
+    category_order = ['fat_jet', 'subjet3_tracks']
+    feature_name = 'subjet3_tracks/%s' % set_type
+    feature_names = {}
+    feature_names['fat_jet'] = ('pt',  'eta', 'mass')
+    feature_names['subjet3_tracks'] = ('btag_ip_d0', 'btag_ip_d0_sigma', 'btag_ip_z0', 'btag_ip_z0_sigma',
                                        'chiSquared', 'deta', 'dphi', 'dr', 'eta',
                                        'numberDoF', 'numberOfInnermostPixelLayerHits',
                                        'numberOfNextToInnermostPixelLayerHits', 'numberOfPixelHits',
@@ -489,10 +519,14 @@ if __name__ == "__main__":
         create_subjet1(hf, save_file, set_type)
         print("Splitting subjet2")
         create_subjet2(hf, save_file, set_type)
+        print("Splitting subjet3")
+        create_subjet3(hf, save_file, set_type)
         print("Splitting subjet1_tracks")
         create_subjet1_tracks(hf, save_file, set_type)
         print("Splitting subjet2_tracks")
         create_subjet2_tracks(hf, save_file, set_type)
+        print("Splitting subjet3_tracks")
+        create_subjet3_tracks(hf, save_file, set_type)
         print("Splitting hl clusters")
         create_high_level_clusters(hf, save_file, set_type)
         print("splitting hl tracks")

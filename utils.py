@@ -48,25 +48,28 @@ def shuffle_samples(data, axis=0):
         assert 1==0, "not implemented but easy to implement"
 
 
-def count_num_samples_from_hdf5(file_name, round_down=1.0):
+def count_num_samples_from_hdf5(file_name, round_down=1.0, feature_names=None):
     hf = h5py.File(file_name, 'r')
-    feature_names = hf.keys()
+    if feature_names is None:
+        feature_names = hf.keys()
     num_samples = None
     for feature_name in feature_names:
+        print(feature_name)
         data = hf.get(feature_name)
         assert data is not None, "%s, %s"%(file_name, feature_name)
         if num_samples is None:
             num_samples = data.shape[0]
             num_samples = np.floor(num_samples/round_down)
         else:
+            assert len(data.shape) > 0, (file_name, data.shape)
             assert num_samples == np.floor(data.shape[0]/round_down), "num samples changed for %s  %s"%(file_name, feature_name)
     return num_samples
 
 
-def count_num_samples_from_hdf5_file_list(list_of_files, round_down=1.0):
+def count_num_samples_from_hdf5_file_list(list_of_files, round_down=1.0, feature_names=None):
     total_num_samples = 0
     for file_name in list_of_files:
-        num_samples = count_num_samples_from_hdf5(file_name, round_down)
+        num_samples = count_num_samples_from_hdf5(file_name, round_down, feature_names)
         total_num_samples += num_samples
     return total_num_samples
 

@@ -27,15 +27,18 @@ for dataset_name in dataset_names:
     new_sizes = {u'fat_jet': (N, 17),
                      u'subjet1': (N, 46),
                      u'subjet2': (N, 46),
+                     u'subjet3': (N, 46),
                      u'subjet1_tracks': (N, 21, 10), # 10 tracks each with 21 variables
                      u'subjet2_tracks': (N, 21, 10),
+                     u'subjet3_tracks': (N, 21, 10),
+                     u'weight': (N,)
                     }  
     if save_data is None:
         save_data = save_f.create_dataset("%s"%(dataset_name), new_sizes[dataset_name], dtype='f')
     assert data.shape[0] == save_data.shape[0]
     num_samples = data.shape[0]
     print("generating random indices")
-    indices = range(num_samples)
+    indices = list(range(num_samples))
     np.random.seed(2)
     np.random.shuffle(indices)
     np.save(path+"randomization_indexes_%s.npy"%sys.argv[1], indices)

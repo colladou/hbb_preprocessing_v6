@@ -4,6 +4,7 @@ import numpy as np
 import h5py
 import utils
 import sys
+from glob import glob
 
 def create_dataset(open_file, feature_name, shape):
     try:
@@ -18,8 +19,8 @@ def save_index_conversion(file_name, original_indexes, merged_file_indexes, new_
         original_to_new[original] = new
         new_to_original[new] = (original, file_name)
         
-    np.save("%s_original_to_new" % file_name.replace('.h5', ''), original_to_new)
-    np.save(path+"new_to_original_%s" % sys.argv[1], new_to_original)
+    #np.save("%s_original_to_new" % file_name.replace('.h5', ''), original_to_new)
+    #np.save(path+"new_to_original_%s" % sys.argv[1], new_to_original)
 
 category_names = {}
 category_names['fat_jet'] = ('Split12', 'Split23', 'Qw', 'PlanarFlow', 'Angularity', 'Aplanarity', 'ZCut12', 'KtDR', 
@@ -42,6 +43,7 @@ category_names['subjet1'] = ('MV2c10_discriminant',
                              'HadronConeExclTruthLabelID', 'HadronConeExclExtendedTruthLabelID', 
                              'pt', 'eta', 'deta', 'dphi', 'dr')
 category_names['subjet2'] = category_names['subjet1']
+category_names['subjet3'] = category_names['subjet1']
 category_names['subjet1_tracks'] = ('chiSquared', 'numberDoF', 
                                     'btag_ip_d0', 'btag_ip_z0', 'btag_ip_d0_sigma', 'btag_ip_z0_sigma', 
                                     'numberOfInnermostPixelLayerHits', 'numberOfNextToInnermostPixelLayerHits', 'numberOfPixelHits', 
@@ -49,10 +51,11 @@ category_names['subjet1_tracks'] = ('chiSquared', 'numberDoF',
                                     'numberOfSCTHoles', 'numberOfSCTSharedHits', 
                                     'pt', 'eta', 'deta', 'dphi', 'dr', 'ptfrac')
 category_names['subjet2_tracks'] = category_names['subjet1_tracks']
-
+category_names['subjet3_tracks'] = category_names['subjet1_tracks']
+category_names['weight'] = ()
 
 # Merges many hdf5 files into one
-path = "/baldig/physicsprojects/atlas/hbb/raw_data/v_6/"
+data_path = "/baldig/physicsprojects/atlas/hbb/raw_data/v_6/"
 
 tag = sys.argv[1]
 assert tag is not None, "please specify a tag (signal, bg, other)"
@@ -61,37 +64,39 @@ new_file_dataset_name = "temporary_flattened_data_%s.h5"%tag
 
 if tag == "signal":
     round_down = 1.0 # This is in case you want to use only a percentage of the samples in each file, default is to use all (1.0) 
-else:
+elif tag=='bg':
     round_down = 10.0 
+else:
+    round_down = 1.0
 
-feature_names = [u'fat_jet', u'subjet1', u'subjet2', u'subjet1_tracks', u'subjet2_tracks']
+feature_names = [u'fat_jet', u'subjet1', u'subjet2', u'subjet3', u'subjet1_tracks', u'subjet2_tracks', u'subjet3_tracks', 'weight']
 
 # This list can contain the names of many h5 files and it will merge them into one.
-file_list_s = []
-file_list_bg = []
-             
+
+file_list = []
+
 if tag == 'signal':
-    file_list = file_list_s
-elif tag == 'bg':
-    file_list = file_list_bg
-elif tag == 'other':
-    file_list = ['output.h5']
-
-f_names = []
-for name in file_list:
-    f_names.append(path + name)
-
+    f_names = glob(data_path+'dihiggs/*/*.h5')
+elif tag=='bg':
+    f_names = glob(data_path+'dijet/*/*.h5')
+else:
+    f_names = ['output.h5']
+          
+for f_name in f_names:
+    file_list.append(f_name)
+   
 files = []
 for f_name in f_names:
     files.append(h5py.File(f_name, 'r'))
 
 # Calculate total samples
-total_samples = utils.count_num_samples_from_hdf5_file_list(f_names, round_down)
+total_samples = utils.count_num_samples_from_hdf5_file_list(f_names, round_down, feature_names=feature_names)
 print("total samples", total_samples)
 
 new_to_original = {}
 
-new_hdf5 = h5py.File(path + new_file_dataset_name, 'w')
+new_hdf5 = h5py.File(data_path + new_file_dataset_name, 'w')
+#for feature_name in ['weight']:
 for feature_name in feature_names:
     print(feature_name)
     start = 0
@@ -102,14 +107,18 @@ for feature_name in feature_names:
         print("loading %s" % f_name)
         f = h5py.File(f_name)
         data = f.get(feature_name)
-        col_names = category_names[feature_name]
+        if feature_name != 'weight':
+            col_names = category_names[feature_name]
         assert data is not None
         N = int(total_samples)
         new_sizes = {u'fat_jet': (N, 17),
                      u'subjet1': (N, 46),
                      u'subjet2': (N, 46),
+                     u'subjet3': (N, 46),
                      u'subjet1_tracks': (N, 21, 10), # 10 tracks each with 21 variables
                      u'subjet2_tracks': (N, 21, 10),
+                     u'subjet3_tracks': (N, 21, 10),
+                     u'weight': (N,)
                     }
 
         # Create the new empty dataset
@@ -125,7 +134,8 @@ for feature_name in feature_names:
         #if old_names is None:
         #    old_names = col_names
         #assert old_names == col_names, old_names + col_names
-        data = data[col_names][:] 
+        if feature_name != 'weight':
+            data = data[col_names][:]  # enforce a label order 
         if len(data.shape) == 1:
             data = data[:]
         elif len(data.shape) == 2:
@@ -140,7 +150,10 @@ for feature_name in feature_names:
 
         assert data is not None
         if len(data.shape) == 1:
-            data = utils.flatten(data[0:num_samples_this_file])
+            if feature_name == 'weight':
+                data = data[0:num_samples_this_file]
+            else:
+                data = utils.flatten(data[0:num_samples_this_file])
             save_data[start:end] = data
         elif len(data.shape) == 2:
             data = utils.flatten(data[0:num_samples_this_file, :])
