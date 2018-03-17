@@ -24,7 +24,7 @@ for dataset_name in dataset_names:
     data = load_f.get(dataset_name)
     save_data = save_f.get(dataset_name)
     N = data.shape[0]
-    new_sizes = {u'fat_jet': (N, 17),
+    new_sizes = {u'fat_jet': (N, 17+1),
                      u'subjet1': (N, 46),
                      u'subjet2': (N, 46),
                      u'subjet3': (N, 46),

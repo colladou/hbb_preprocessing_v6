@@ -23,7 +23,7 @@ def save_index_conversion(file_name, original_indexes, merged_file_indexes, new_
     #np.save(path+"new_to_original_%s" % sys.argv[1], new_to_original)
 
 category_names = {}
-category_names['fat_jet'] = ('Split12', 'Split23', 'Qw', 'PlanarFlow', 'Angularity', 'Aplanarity', 'ZCut12', 'KtDR', 
+category_names['fat_jet'] = ('GhostHBosonsCount', 'Split12', 'Split23', 'Qw', 'PlanarFlow', 'Angularity', 'Aplanarity', 'ZCut12', 'KtDR', 
                              'pt', 'eta', 'mass', 
                              'C2', 'D2', 'e3', 
                              'Tau21_wta', 'Tau32_wta', 'FoxWolfram20')
@@ -107,11 +107,13 @@ for feature_name in feature_names:
         print("loading %s" % f_name)
         f = h5py.File(f_name)
         data = f.get(feature_name)
+        
+    
         if feature_name != 'weight':
             col_names = category_names[feature_name]
         assert data is not None
         N = int(total_samples)
-        new_sizes = {u'fat_jet': (N, 17),
+        new_sizes = {u'fat_jet': (N, 17+1),
                      u'subjet1': (N, 46),
                      u'subjet2': (N, 46),
                      u'subjet3': (N, 46),

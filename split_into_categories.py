@@ -16,7 +16,7 @@ def create_dataset(open_file, feature_name, shape):
 def get_names():
     # True names to use from each category. This is in order to prevent using Truth variables and enforce an order in the variables
     category_names = {}
-    category_names['fat_jet'] = ('pt',  'eta',  'mass', 
+    category_names['fat_jet'] = ('GhostHBosonsCount', 'pt',  'eta',  'mass', 
                               'Angularity', 'Aplanarity', 'C2', 'D2', 'FoxWolfram20',
                               'KtDR', 'Qw', 'PlanarFlow', 'Split12', 'Split23',
                               'Tau21_wta', 'Tau32_wta', 
@@ -123,7 +123,7 @@ def create_weights(open_file, save_file, set_type):
     assert data is not None
     num_samples = data.shape[0]
     num_features = 1
-    save_data = create_dataset(save_file, feature_name, (num_samples, num_features))
+    save_data = create_dataset(save_file, feature_name, (num_samples,))
     save_data[:] = data[:]
 
 def create_fat_jet(open_file, save_file, set_type):
@@ -472,10 +472,10 @@ if __name__ == "__main__":
 
     if sys.argv[1] == 'signal':
         load_name = "temporary_flattened_shuffled_divided_data_signal.h5"
-        save_name = "categorized_data_signal_test_valid_train.h5"
+        save_name = "categorized_data_signal.h5"
     elif sys.argv[1] == 'bg':
         load_name = "temporary_flattened_shuffled_divided_data_bg.h5"
-        save_name = "categorized_data_bg_test_valid_train.h5"
+        save_name = "categorized_data_bg.h5"
     elif sys.argv[1] == 'test':
         load_name = "temporary_flattened_shuffled_divided_data_signal.h5"
         save_name = "delete_me_categorized_data_signal_test_valid_train.h5"
@@ -492,13 +492,13 @@ if __name__ == "__main__":
     hf = h5py.File(file_path + load_name, 'r')
     save_file = h5py.File(file_path + save_name, 'a')
     print(hf.keys())
-    if sys.argv[1] == 'test' or sys.argv[1] == 'hl_tracks':
+    if sys.argv[2] == 'test' or sys.argv[1] == 'hl_tracks':
         for set_type in ['test', 'valid', 'train']:
             print(set_type)
-            print("splitting tracks")
-            create_tracks(hf, save_file, set_type)
-            print("splitting hl tracks")
-            create_high_level_tracks(hf, save_file, set_type)
+            #print("splitting tracks")
+            #create_tracks(hf, save_file, set_type)
+            #print("splitting hl tracks")
+            #create_high_level_tracks(hf, save_file, set_type)
             #print("Splitting hl clusters")
             #create_high_level_clusters(hf, save_file, set_type)
             #print("splitting high")
@@ -508,7 +508,7 @@ if __name__ == "__main__":
             #print("creating single_jet_predictions")
             #create_single_jet_predictions(hf, save_file, set_type)
         assert 1==0
-   
+    """
     for set_type in ['train', 'valid', 'test']:
         print(set_type)
         #print("Splitting weights")
@@ -549,5 +549,5 @@ if __name__ == "__main__":
         create_all(save_file, save_file, set_type)
         print("splitting DL1")
         create_DL1(save_file, save_file, set_type)
-
+    """
 
