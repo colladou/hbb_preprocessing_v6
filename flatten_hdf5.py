@@ -39,8 +39,8 @@ elif tag=='bg':
 else:
     round_down = 1.0
 
-feature_names = [u'fat_jet']
-#feature_names = [u'fat_jet', u'subjet1', u'subjet2', u'subjet3', u'subjet1_tracks', u'subjet2_tracks', u'subjet3_tracks', 'weight']
+#feature_names = [u'fat_jet']
+feature_names = [u'fat_jet', u'subjet1', u'subjet2', u'subjet3', u'subjet1_tracks', u'subjet2_tracks', u'subjet3_tracks', 'weight']
 
 # This list can contain the names of many h5 files and it will merge them into one.
 
