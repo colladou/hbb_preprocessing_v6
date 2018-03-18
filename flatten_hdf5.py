@@ -85,9 +85,9 @@ for feature_name in feature_names:
         assert data is not None
         N = int(total_samples)
         new_sizes = {u'fat_jet': (N, 17+1),
-                     u'subjet1': (N, 46),
-                     u'subjet2': (N, 46),
-                     u'subjet3': (N, 46),
+                     u'subjet1': (N, 42),
+                     u'subjet2': (N, 42),
+                     u'subjet3': (N, 42),
                      u'subjet1_tracks': (N, 21, 10), # 10 tracks each with 21 variables
                      u'subjet2_tracks': (N, 21, 10),
                      u'subjet3_tracks': (N, 21, 10),
@@ -129,8 +129,8 @@ for feature_name in feature_names:
                 data = utils.flatten(data[0:num_samples_this_file])
 
             raw_data = f.get(feature_name)
-            assert np.nanmean(data[:, 0]) == np.nanmean(raw_data[col_names[0]]), [np.nanmean(data[:, 0]), np.nanmean(raw_data[col_names[0]])]            
-            print(col_names[0], np.nanmean(data[:, 0]), np.nanmean(raw_data[col_names[0]]))
+            #assert np.nanmean(data[:, 0]) == np.nanmean(raw_data[col_names[0]]), [np.nanmean(data[:, 0]), np.nanmean(raw_data[col_names[0]])]            
+            #print(col_names[0], np.nanmean(data[:, 0]), np.nanmean(raw_data[col_names[0]]))
             save_data[start:end] = data
         elif len(data.shape) == 2:
             data = utils.flatten(data[0:num_samples_this_file, :])
