@@ -22,37 +22,7 @@ def save_index_conversion(file_name, original_indexes, merged_file_indexes, new_
     #np.save("%s_original_to_new" % file_name.replace('.h5', ''), original_to_new)
     #np.save(path+"new_to_original_%s" % sys.argv[1], new_to_original)
 
-category_names = {}
-category_names['fat_jet'] = ('GhostHBosonsCount', 'Split12', 'Split23', 'Qw', 'PlanarFlow', 'Angularity', 'Aplanarity', 'ZCut12', 'KtDR', 
-                             'pt', 'eta', 'mass', 
-                             'C2', 'D2', 'e3', 
-                             'Tau21_wta', 'Tau32_wta', 'FoxWolfram20')
-#category_names['clusters'] = ('pt', 'deta', 'dphi', 'energy', 'mask')
-category_names['subjet1'] = ('MV2c10_discriminant', 
-                             'DL1_pb', 'DL1_pc', 'DL1_pu', 
-                             'IP2D_pb', 'IP2D_pc', 'IP2D_pu', 
-                             'IP3D_pb', 'IP3D_pc', 'IP3D_pu', 
-                             'SV1_pu', 'SV1_pb', 'SV1_pc', 
-                             'rnnip_pu', 'rnnip_pc', 'rnnip_pb', 'rnnip_ptau', 
-                             'JetFitter_energyFraction', 'JetFitter_mass', 'JetFitter_significance3d', 
-                             'JetFitter_deltaphi', 'JetFitter_deltaeta', 'JetFitter_massUncorr', 'JetFitter_dRFlightDir', 
-                             'SV1_masssvx', 'SV1_efracsvx', 'SV1_significance3d', 'SV1_dstToMatLay', 'SV1_deltaR', 'SV1_Lxy', 'SV1_L3d', 
-                             'JetFitter_nVTX', 'JetFitter_nSingleTracks', 'JetFitter_nTracksAtVtx', 'JetFitter_N2Tpair', 
-                             'SV1_N2Tpair', 'SV1_NGTinSvx', 
-                             'GhostBHadronsFinalCount', 'GhostCHadronsFinalCount', 
-                             'HadronConeExclTruthLabelID', 'HadronConeExclExtendedTruthLabelID', 
-                             'pt', 'eta', 'deta', 'dphi', 'dr')
-category_names['subjet2'] = category_names['subjet1']
-category_names['subjet3'] = category_names['subjet1']
-category_names['subjet1_tracks'] = ('chiSquared', 'numberDoF', 
-                                    'btag_ip_d0', 'btag_ip_z0', 'btag_ip_d0_sigma', 'btag_ip_z0_sigma', 
-                                    'numberOfInnermostPixelLayerHits', 'numberOfNextToInnermostPixelLayerHits', 'numberOfPixelHits', 
-                                    'numberOfPixelHoles', 'numberOfPixelSharedHits', 'numberOfPixelSplitHits', 'numberOfSCTHits', 
-                                    'numberOfSCTHoles', 'numberOfSCTSharedHits', 
-                                    'pt', 'eta', 'deta', 'dphi', 'dr', 'ptfrac')
-category_names['subjet2_tracks'] = category_names['subjet1_tracks']
-category_names['subjet3_tracks'] = category_names['subjet1_tracks']
-category_names['weight'] = ()
+category_names = utils.get_category_names()
 
 # Merges many hdf5 files into one
 data_path = "/baldig/physicsprojects/atlas/hbb/raw_data/v_6/"
@@ -69,7 +39,8 @@ elif tag=='bg':
 else:
     round_down = 1.0
 
-feature_names = [u'fat_jet', u'subjet1', u'subjet2', u'subjet3', u'subjet1_tracks', u'subjet2_tracks', u'subjet3_tracks', 'weight']
+feature_names = [u'fat_jet']
+#feature_names = [u'fat_jet', u'subjet1', u'subjet2', u'subjet3', u'subjet1_tracks', u'subjet2_tracks', u'subjet3_tracks', 'weight']
 
 # This list can contain the names of many h5 files and it will merge them into one.
 
@@ -137,7 +108,7 @@ for feature_name in feature_names:
         #    old_names = col_names
         #assert old_names == col_names, old_names + col_names
         if feature_name != 'weight':
-            data = data[col_names][:]  # enforce a label order 
+            data = data[col_names]  # enforce a label order # It seems this doesnt work...
         if len(data.shape) == 1:
             data = data[:]
         elif len(data.shape) == 2:
@@ -156,6 +127,10 @@ for feature_name in feature_names:
                 data = data[0:num_samples_this_file]
             else:
                 data = utils.flatten(data[0:num_samples_this_file])
+
+            raw_data = f.get(feature_name)
+            assert np.nanmean(data[:, 0]) == np.nanmean(raw_data[col_names[0]]), [np.nanmean(data[:, 0]), np.nanmean(raw_data[col_names[0]])]            
+            print(col_names[0], np.nanmean(data[:, 0]), np.nanmean(raw_data[col_names[0]]))
             save_data[start:end] = data
         elif len(data.shape) == 2:
             data = utils.flatten(data[0:num_samples_this_file, :])
