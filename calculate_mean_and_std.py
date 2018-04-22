@@ -27,14 +27,13 @@ if __name__ == "__main__":
     print("this is using the same amount of signal and bg, make sure this is what you want")
     save_path = "/baldig/physicsprojects/atlas/hbb/raw_data/v_6/"
     load_path = "/baldig/physicsprojects/atlas/hbb/raw_data/v_6/"
-    file_name_signal = "categorized_data_signal_test_valid_train.h5"
-    file_name_bg = "categorized_data_bg_test_valid_train.h5"
+    file_name_signal = "categorized_data_signal.h5"
+    file_name_bg = "categorized_data_bg.h5"
 
     signal_hf = h5py.File(load_path + file_name_signal, 'r')
     bg_hf = h5py.File(load_path + file_name_bg, 'r')
     feature_names = signal_hf.keys()
-
-#    for feature_name in ['single_jet_predictions']:
+    #for feature_name in ['mv2c10+']:
     for feature_name in feature_names:
         print("Processing feature %s" % feature_name)
         signal_data = signal_hf.get(feature_name + '/train')
