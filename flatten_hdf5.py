@@ -35,7 +35,9 @@ new_file_dataset_name = "temporary_flattened_data_%s.h5"%tag
 if tag == "signal":
     round_down = 1.0 # This is in case you want to use only a percentage of the samples in each file, default is to use all (1.0) 
 elif tag=='bg':
-    round_down = 10.0 
+    round_down = 1.0 
+elif tag=='top':
+    round_down = 1.0
 else:
     round_down = 1.0
 
@@ -50,6 +52,8 @@ if tag == 'signal':
     f_names = glob(data_path+'dihiggs/*/*.h5')
 elif tag=='bg':
     f_names = glob(data_path+'dijet/*/*.h5')
+elif tag=='top':
+    f_names = glob(data_path+'top/*/*.h5')
 else:
     f_names = ['output.h5']
           
