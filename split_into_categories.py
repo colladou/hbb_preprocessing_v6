@@ -33,6 +33,7 @@ def get_position_indexes_from_names(feature_names):
 def create_new_feature_subset(open_file, feature_name, set_type, feature_names, category_order):
     data = []
     for category_name in category_order:
+        print(category_name)
         data.append(open_file.get('%s/%s' % (category_name, set_type)))
     for element in data: assert element is not None
     num_samples = data[0].shape[0]
@@ -220,12 +221,11 @@ def create_DL1(open_file, save_file, set_type):
     create_new_feature_subset(open_file, feature_name, set_type, feature_names, category_order)
 
 def create_mv2c10_plus(open_file, save_file, set_type):
-    assert 1==0, "update"
-    category_order = ['jets', 'subjet1', 'subjet2']
+    category_order = ['fat_jet', 'subjet1', 'subjet2']
     feature_name = 'mv2c10+/%s' % set_type
     feature_names = {}
-    feature_names['jets'] = ('pt',  'eta')
-    feature_names['subjet1'] = ('pt', 'eta', 'mv2c10', 'dphi_fatjet', 'deta_fatjet', 'dr_fatjet')
+    feature_names['fat_jet'] = ('pt',  'eta', 'mass')
+    feature_names['subjet1'] = ('MV2c10_discriminant', 'deta', 'dphi', 'dr',)
     feature_names['subjet2'] = feature_names['subjet1']
     create_new_feature_subset(open_file, feature_name, set_type, feature_names, category_order)
 
@@ -444,6 +444,14 @@ if __name__ == "__main__":
     elif sys.argv[1] == 'test':
         load_name = "temporary_flattened_shuffled_divided_data_signal.h5"
         save_name = "delete_me_categorized_data_signal_test_valid_train.h5"
+        if sys.argv[2] == 'signal':
+            load_name = "temporary_flattened_shuffled_divided_data_signal.h5"
+            save_name = "delete_me_categorized_data_signal.h5"
+        elif sys.argv[2] == 'bg':
+            load_name = "temporary_flattened_shuffled_divided_data_bg.h5"
+            save_name = "delete_me_categorized_data_bg.h5"
+        else:
+            pass   
     elif sys.argv[1] == 'hl_tracks':
         load_name = "temporary_flattened_shuffled_divided_data_signal.h5"
         #load_name = "temporary_flattened_shuffled_divided_data_bg.h5"
@@ -457,7 +465,7 @@ if __name__ == "__main__":
     hf = h5py.File(file_path + load_name, 'r')
     save_file = h5py.File(file_path + save_name, 'a')
     print(hf.keys())
-    if sys.argv[2] == 'test' or sys.argv[1] == 'hl_tracks':
+    if sys.argv[1] == 'test' or sys.argv[1] == 'hl_tracks':
         for set_type in ['test', 'valid', 'train']:
             print(set_type)
             #print("splitting tracks")
@@ -468,16 +476,19 @@ if __name__ == "__main__":
             #create_high_level_clusters(hf, save_file, set_type)
             #print("splitting high")
             #create_high(save_file, save_file, set_type)
-            print("splitting weights")
-            create_weights(hf, save_file, set_type)
+            print("splitting mv2c10+")
+            create_mv2c10_plus(hf, save_file, set_type)
             #print("creating single_jet_predictions")
             #create_single_jet_predictions(hf, save_file, set_type)
         assert 1==0
-    """
+    
     for set_type in ['train', 'valid', 'test']:
         print(set_type)
-        #print("Splitting weights")
-        #create_weights(hf, save_file, set_type)
+        print("splitting mv2c10+")
+        create_mv2c10_plus(hf, save_file, set_type)
+        """
+        print("Splitting weights")
+        create_weights(hf, save_file, set_type)
         print("Splitting fat_jet")
         create_fat_jet(hf, save_file, set_type)
         print("Splitting subjet1")
@@ -514,5 +525,4 @@ if __name__ == "__main__":
         create_all(save_file, save_file, set_type)
         print("splitting DL1")
         create_DL1(save_file, save_file, set_type)
-    """
-
+        """

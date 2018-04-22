@@ -35,7 +35,7 @@ if True:
         if len(data.shape) == 1:
             size = [len(indices)]
         elif len(data.shape) == 2:
-            if False #feature != "fat_jet":
+            if False: #feature != "fat_jet":
                 size = [len(indices), data.shape[1]-1]
             else:
                 size = [len(indices), data.shape[1]]
@@ -50,7 +50,7 @@ if True:
             if len(size) == 1:
                 dset[new_i] = data[old_i]
             elif len(size) == 2:
-                if False #feature != "fat_jet":
+                if False: #feature != "fat_jet":
                     dset[new_i, :] = data[old_i, 1:]
                 else:
                     dset[new_i, :] = data[old_i, :]   

@@ -31,7 +31,10 @@ assert sys.argv[1] is not None, 'please specify signal or bg'
 
 tag = sys.argv[1]
 
-load_and_save_file_names = [["temporary_flattened_shuffled_data_%s.h5"%tag, "temporary_flattened_shuffled_divided_data_%s.h5"%tag]]
+if tag == 'signal':
+    load_and_save_file_names = [['temporary_flattened_shuffled_cleaned_data_%s.h5'%tag, "temporary_flattened_shuffled_divided_data_%s.h5"%tag]]
+else:
+    load_and_save_file_names = [["temporary_flattened_shuffled_data_%s.h5"%tag, "temporary_flattened_shuffled_divided_data_%s.h5"%tag]]
 
 for load_file_name, save_file_name in load_and_save_file_names:
     #split_vector = (0.7, 0.15, 0.15)
