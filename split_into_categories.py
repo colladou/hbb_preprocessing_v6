@@ -441,6 +441,9 @@ if __name__ == "__main__":
     elif sys.argv[1] == 'bg':
         load_name = "temporary_flattened_shuffled_divided_data_bg.h5"
         save_name = "categorized_data_bg.h5"
+    elif sys.argv[1] == 'top':
+        load_name = "temporary_flattened_shuffled_divided_data_top.h5"
+        save_name = "categorized_data_top.h5"
     elif sys.argv[1] == 'test':
         load_name = "temporary_flattened_shuffled_divided_data_signal.h5"
         save_name = "delete_me_categorized_data_signal_test_valid_train.h5"
@@ -482,11 +485,8 @@ if __name__ == "__main__":
             #create_single_jet_predictions(hf, save_file, set_type)
         assert 1==0
     
-    for set_type in ['train', 'valid', 'test']:
+    for set_type in ['valid', 'test', 'train']:
         print(set_type)
-        print("splitting mv2c10+")
-        create_mv2c10_plus(hf, save_file, set_type)
-        """
         print("Splitting weights")
         create_weights(hf, save_file, set_type)
         print("Splitting fat_jet")
@@ -511,6 +511,8 @@ if __name__ == "__main__":
         create_mv2c10(hf, save_file, set_type)
         print("splitting tracks")
         create_tracks(hf, save_file, set_type)
+        print("splitting mv2c10+")
+        create_mv2c10_plus(hf, save_file, set_type)
         #print("splitting clusters")
         #create_clusters(hf, save_file, set_type)
         print("splitting high")
@@ -525,4 +527,3 @@ if __name__ == "__main__":
         create_all(save_file, save_file, set_type)
         print("splitting DL1")
         create_DL1(save_file, save_file, set_type)
-        """

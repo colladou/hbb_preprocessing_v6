@@ -7,7 +7,7 @@ import sys
 
 path = "/baldig/physicsprojects/atlas/hbb/raw_data/v_6/"
 
-assert sys.argv[1] is not None, "Please specify a tag (signal, bg, other)"
+assert sys.argv[1] is not None, "Please specify a tag (signal, bg, top, other)"
 
 tag = sys.argv[1]
 
