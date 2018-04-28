@@ -103,6 +103,13 @@ def create_fat_jet(open_file, save_file, set_type):
     feature_name = 'fat_jet/%s' % set_type
     create_new_feature_subset(open_file, feature_name, set_type, feature_names, category_order)
 
+def create_kinematic(open_file, save_file, set_type):
+    category_order = ['fat_jet']
+    feature_names = {}
+    feature_names['fat_jet'] = ('pt',  'eta',  'mass',)
+    feature_name = 'kinematic/%s' % set_type
+    create_new_feature_subset(open_file, feature_name, set_type, feature_names, category_order)
+
 def create_high_level_clusters(open_file, save_file, set_type):
     category_order = ['fat_jet']
     feature_names = {}
@@ -437,13 +444,16 @@ if __name__ == "__main__":
 
     if sys.argv[1] == 'signal':
         load_name = "temporary_flattened_shuffled_divided_data_signal.h5"
-        save_name = "categorized_data_signal.h5"
+        #save_name = "categorized_data_signal.h5"
+        save_name = "categorized_data_divided_signal.h5"
     elif sys.argv[1] == 'bg':
         load_name = "temporary_flattened_shuffled_divided_data_bg.h5"
-        save_name = "categorized_data_bg.h5"
+        #save_name = "categorized_data_bg.h5"
+        save_name = "categorized_data_divided_bg.h5"
     elif sys.argv[1] == 'top':
         load_name = "temporary_flattened_shuffled_divided_data_top.h5"
-        save_name = "categorized_data_top.h5"
+        #save_name = "categorized_data_top.h5"
+        save_name = "categorized_data_divided_top.h5"
     elif sys.argv[1] == 'test':
         load_name = "temporary_flattened_shuffled_divided_data_signal.h5"
         save_name = "delete_me_categorized_data_signal_test_valid_train.h5"
