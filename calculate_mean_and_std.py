@@ -34,7 +34,10 @@ if __name__ == "__main__":
     signal_hf = h5py.File(load_path + file_name_signal, 'r')
     bg_hf = h5py.File(load_path + file_name_bg, 'r')
     top_hf = h5py.File(load_path + file_name_top, 'r')
-    feature_names = signal_hf.keys()
+    feature_names = list(signal_hf.keys())
+    w_index = feature_names.index('weights')
+    if w_index is not None:
+        feature_names.pop(w_index)
     #for feature_name in ['mv2c10+']:
     for feature_name in feature_names:
         print("Processing feature %s" % feature_name)
