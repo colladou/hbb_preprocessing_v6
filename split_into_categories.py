@@ -212,28 +212,31 @@ def create_single_jet_predictions(open_file, save_file, set_type, label_type):
     copy_in_batches(data, save_data, sub_selection)
 
 def create_mv2c10(open_file, save_file, set_type):
-    category_order = ['subjet1', 'subjet2']
+    category_order = ['subjet1', 'subjet2', 'subjet3']
     feature_name = 'mv2c10/%s' % set_type
     feature_names = {}
     feature_names['subjet1'] = ('MV2c10_discriminant')
     feature_names['subjet2'] = feature_names['subjet1']
+    feature_names['subjet3'] = feature_names['subjet1']
     create_new_feature_subset(open_file, feature_name, set_type, feature_names, category_order)
 
 def create_DL1(open_file, save_file, set_type):
-    category_order = ['subjet1', 'subjet2']
+    category_order = ['subjet1', 'subjet2', 'subjet3']
     feature_name = 'dl1/%s' % set_type
     feature_names = {}
     feature_names['subjet1'] = ('DL1_pb', 'DL1_pc', 'DL1_pu')
     feature_names['subjet2'] = feature_names['subjet1']
+    feature_names['subjet3'] = feature_names['subjet1']
     create_new_feature_subset(open_file, feature_name, set_type, feature_names, category_order)
 
 def create_mv2c10_plus(open_file, save_file, set_type):
-    category_order = ['subjet1', 'subjet2']
+    category_order = ['subjet1', 'subjet2', 'subjet3']
     feature_name = 'mv2c10+/%s' % set_type
     feature_names = {}
     #feature_names['fat_jet'] = ('pt',  'eta', 'mass')
     feature_names['subjet1'] = ('MV2c10_discriminant', 'deta', 'dphi', 'dr',)
     feature_names['subjet2'] = feature_names['subjet1']
+    feature_names['subjet3'] = feature_names['subjet1']
     create_new_feature_subset(open_file, feature_name, set_type, feature_names, category_order)
 
 
