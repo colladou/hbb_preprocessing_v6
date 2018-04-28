@@ -47,7 +47,7 @@ if __name__ == "__main__":
         print("subsampling...")
         signal_data = subsample(signal_data, 200000)
         bg_data = subsample(bg_data, 200000)
-        top_data = subsamples(top_data, 200000)
+        top_data = subsample(top_data, 200000)
         if len(signal_data.shape) == 3:
             print("flattening...")
             #data = flatten(data)
