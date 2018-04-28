@@ -113,7 +113,7 @@ def create_kinematic(open_file, save_file, set_type):
 def create_high_level_clusters(open_file, save_file, set_type):
     category_order = ['fat_jet']
     feature_names = {}
-    feature_names['fat_jet'] = ('pt',  'eta', 'mass',
+    feature_names['fat_jet'] = (#'pt',  'eta', 'mass',
                                 'Angularity', 'Aplanarity', 'C2', 'D2', 'FoxWolfram20',
                                 'KtDR', 'Qw', 'PlanarFlow', 'Split12', 'Split23',
                                 'Tau21_wta', 'Tau32_wta', 
