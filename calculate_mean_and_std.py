@@ -25,33 +25,40 @@ def subsample(data, num_samples, shuffled=True):
 if __name__ == "__main__":
     #assert 1==0, "this calculates statistics of different files, we need to merge them, also change subsampling value"
     print("this is using the same amount of signal and bg, make sure this is what you want")
-    save_path = "/baldig/physicsprojects/atlas/hbb/raw_data/v_6/"
+    save_path = "/baldig/physicsprojects/atlas/hbb/raw_data/v_6/divided_statistics/"
     load_path = "/baldig/physicsprojects/atlas/hbb/raw_data/v_6/"
-    file_name_signal = "categorized_data_signal.h5"
-    file_name_bg = "categorized_data_bg.h5"
-
+    file_name_signal = "categorized_data_divided_signal.h5"
+    file_name_bg = "categorized_data_divided_bg.h5"
+    file_name_top = "categorized_data_divided_top.h5"   
+ 
     signal_hf = h5py.File(load_path + file_name_signal, 'r')
     bg_hf = h5py.File(load_path + file_name_bg, 'r')
+    top_hf = h5py.File(load_path + file_name_top, 'r')
     feature_names = signal_hf.keys()
     #for feature_name in ['mv2c10+']:
     for feature_name in feature_names:
         print("Processing feature %s" % feature_name)
         signal_data = signal_hf.get(feature_name + '/train')
         bg_data = bg_hf.get(feature_name + '/train')
+        top_data = top_hf.get(feature_name + '/train')
         assert signal_data is not None
         assert bg_data is not None
+        assert top_data is not None
         print("subsampling...")
-        signal_data = subsample(signal_data, 500000)
-        bg_data = subsample(bg_data, 500000)
+        signal_data = subsample(signal_data, 200000)
+        bg_data = subsample(bg_data, 200000)
+        top_data = subsamples(top_data, 200000)
         if len(signal_data.shape) == 3:
             print("flattening...")
             #data = flatten(data)
             signal_data = utils.reshape_to_flat(signal_data)
             bg_data = utils.reshape_to_flat(bg_data)
+            top_data = utils.reshape_to_flat(top_data)
             print(signal_data.shape, bg_data.shape)
-        data = np.vstack((signal_data, bg_data))
+        data = np.vstack((signal_data, top_data))
+        data = np.vstack((data, bg_data))
         print(data.shape)
-        assert data.shape[0] == signal_data.shape[0] + bg_data.shape[0], data.shape[0]
+        assert data.shape[0] == signal_data.shape[0] + bg_data.shape[0] + top_data.shape[0], data.shape[0]
         print("calculating statistics...")
         mean_vector = np.nanmean(data, axis=0)
         std_vector = np.nanstd(data, axis=0)
