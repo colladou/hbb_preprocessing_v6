@@ -53,7 +53,7 @@ if tag == 'signal':
 elif tag=='bg':
     f_names = glob(data_path+'dijet/*/*.h5')
 elif tag=='top':
-    f_names = glob(data_path+'top/*/*.h5')
+    f_names = glob(data_path+'ditop/*/*.h5')
 else:
     f_names = ['output.h5']
           
@@ -67,6 +67,7 @@ for f_name in f_names:
 # Calculate total samples
 total_samples = utils.count_num_samples_from_hdf5_file_list(f_names, round_down, feature_names=feature_names)
 print("total samples", total_samples)
+assert total_samples != 0
 
 new_to_original = {}
 
