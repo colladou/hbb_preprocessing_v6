@@ -58,15 +58,16 @@ if __name__ == "__main__":
             bg_data = utils.reshape_to_flat(bg_data)
             top_data = utils.reshape_to_flat(top_data)
             print(signal_data.shape, bg_data.shape)
-        data = np.vstack((signal_data, top_data))
-        data = np.vstack((data, bg_data))
+        data = np.vstack((signal_data, top_data, bg_data))
         print(data.shape)
         assert data.shape[0] == signal_data.shape[0] + bg_data.shape[0] + top_data.shape[0], data.shape[0]
         print("calculating statistics...")
         mean_vector = np.nanmean(data, axis=0)
+        median_vector = np.nanmedian(data, axis=0)
         std_vector = np.nanstd(data, axis=0)
         print("saving...")
         np.save(save_path + "%s_mean_vector.npy"%feature_name, mean_vector)
+        np.save(save_path + "%s_median_vector.npy"%feature_name, median_vector)
         np.save(save_path + "%s_std_vector.npy"%feature_name, std_vector)
 
 
