@@ -500,10 +500,13 @@ if __name__ == "__main__":
     
     for set_type in ['valid', 'test', 'train']:
         print(set_type)
-        print("Splitting weights")
-        create_weights(hf, save_file, set_type)
+        #print("Splitting weights")
+        #create_weights(hf, save_file, set_type)
         #print("Splitting fat_jet")
         #create_fat_jet(hf, save_file, set_type)
+        print("splitting mv2c10+")
+        create_mv2c10_plus(hf, save_file, set_type)
+        """
         print("Splitting kinematic")
         create_kinematic(hf, save_file, set_type)
         print("Splitting subjet1")
@@ -542,3 +545,4 @@ if __name__ == "__main__":
         #create_all(save_file, save_file, set_type)
         print("splitting DL1")
         create_DL1(save_file, save_file, set_type)
+        """

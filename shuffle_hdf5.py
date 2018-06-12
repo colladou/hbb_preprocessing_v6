@@ -3,6 +3,35 @@ from __future__ import print_function
 import numpy as np
 import h5py
 import sys
+import utils
+
+def remove_bad_missing_values(data):
+    category_names = utils.get_category_names()
+    sub_jet_names = category_names['subjet1']
+    if True:
+        if data[sub_jet_names.index('JetFitter_nVTX')] == 0:
+            print('jet failure')
+            data[sub_jet_names.index('JetFitter_energyFraction')] = np.nan
+            data[sub_jet_names.index('JetFitter_mass')] = np.nan
+            data[sub_jet_names.index('JetFitter_significance3d')] = np.nan
+            data[sub_jet_names.index('JetFitter_deltaphi')] = np.nan
+            data[sub_jet_names.index('JetFitter_deltaeta')] = np.nan
+            data[sub_jet_names.index('JetFitter_massUncorr')] = np.nan
+            data[sub_jet_names.index('JetFitter_dRFlightDir')] = np.nan
+            data[sub_jet_names.index('JetFitter_nSingleTracks')] = np.nan  
+            data[sub_jet_names.index('JetFitter_nTracksAtVtx')] = np.nan
+            data[sub_jet_names.index('JetFitter_N2Tpair')] = np.nan
+        if data[sub_jet_names.index('SV1_masssvx')] == -1:
+            print("mass failure")
+            data[sub_jet_names.index('SV1_efracsvx')] = np.nan
+            data[sub_jet_names.index('SV1_significance3d')] = np.nan
+            data[sub_jet_names.index('SV1_dstToMatLay')] = np.nan
+            data[sub_jet_names.index('SV1_deltaR')] = np.nan
+            data[sub_jet_names.index('SV1_Lxy')] = np.nan
+            data[sub_jet_names.index('SV1_L3d')] = np.nan
+            data[sub_jet_names.index('SV1_N2Tpair')] = np.nan
+            data[sub_jet_names.index('SV1_NGTinSvx')]= np.nan
+    return data
 
 
 path = "/baldig/physicsprojects/atlas/hbb/raw_data/v_6/"
@@ -57,6 +86,8 @@ for dataset_name in dataset_names:
             assert 1==0, 'not implemented'
     
         num_dims = len(mini_batch.shape)
+        if dataset_name in [u'subjet1', u'subjet2', u'subjet3']:
+            mini_batch = remove_bad_missing_values(mini_batch)
 
         if num_dims == 1:
             save_data[start:end] = mini_batch
