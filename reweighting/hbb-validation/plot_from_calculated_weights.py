@@ -11,7 +11,7 @@ import numpy as np
 import json, os
 
 from common import get_denom_dict, get_dsid
-from common import is_dijet, is_ditop, is_dihiggs
+from common import is_dijet, is_ditop, is_dihiggs, is_wz
 from cross_section import CrossSections
 
 def get_args():
@@ -184,7 +184,7 @@ def run_wz(edges, args):
     parts = {}
     for ds in args.datasets:
         dsid = get_dsid(ds)
-        if not is_ditop(dsid):
+        if not is_wz(dsid):
             continue
 
         this_dsid = get_hist(ds, edges)
@@ -194,7 +194,7 @@ def run_wz(edges, args):
     draw_hist(hist, edges, args.out_dir, parts, file_name='calculated_wz.pdf')
     save_hist(hist, edges, args.out_dir, 'calculated_jetpt.h5', 'wz')
 
-def run_ditop_reweighted(edges, args):
+def run_wz_reweighted(edges, args):
     hist = 0 
     parts = {}
     out_dir = args.out_dir
@@ -206,7 +206,7 @@ def run_ditop_reweighted(edges, args):
         ratio[valid] = num[valid] / denom[valid]  
     for ds in args.datasets:
         dsid = get_dsid(ds)
-        if not is_ditop(dsid):
+        if not is_wz(dsid):
             continue
 
         this_dsid = get_hist_reweighted(ds, edges, ratio)

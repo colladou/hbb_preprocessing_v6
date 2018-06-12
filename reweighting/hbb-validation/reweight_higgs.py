@@ -5,7 +5,7 @@ import json, os
 from glob import glob
 
 from common import get_dsid
-from common import is_dijet, is_ditop, is_dihiggs
+from common import is_dijet, is_ditop, is_dihiggs, is_wz
 
 def get_args():
     parser = ArgumentParser(description=__doc__)
@@ -80,7 +80,7 @@ def create_wz_reweights(edges, args):
         ratio[valid] = num[valid] / denom[valid]  # This is the ratio I need
     for ds in args.datasets:
         dsid = get_dsid(ds)
-        if not is_ditop(dsid):
+        if not is_wz(dsid):
             continue
         create_reweights_from_ratio(ds, edges, ratio)
 
@@ -89,3 +89,4 @@ if __name__ == "__main__":
     edges = np.concatenate([[-np.inf], np.linspace(0, 3e6, 101), [np.inf]])
     create_higgs_reweights(edges, args)
     create_ditop_reweights(edges, args)
+    create_wz_reweights(edges, args)

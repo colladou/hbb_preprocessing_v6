@@ -11,7 +11,7 @@ import numpy as np
 import json, os
 
 from common import get_denom_dict, get_dsid
-from common import is_dijet, is_ditop, is_dihiggs
+from common import is_dijet, is_ditop, is_dihiggs, is_wz
 from cross_section import CrossSections
 
 def get_args():
@@ -23,25 +23,36 @@ def get_args():
     return parser.parse_args()
 
 def get_hist(ds, edges):
-    hist = 0
+    hist = None
+    print(glob('%s/*.h5'%ds))
+    print(ds)
     for fpath in glob('%s/*.h5'%ds):
+        print(fpath)
         with File(fpath,'r') as h5file:
-            try:
-                pt = h5file.get('fat_jet')['pt']
-                weight = h5file.get('fat_jet')['mcEventWeight']
-                hist += np.histogram(pt, edges, weights=weight)[0]  # why only select the first element?
-            except(TypeError):
-                print("Please remove this file since it doesn't have valid samples: ", fpath)
+            pt = h5file.get('fat_jet')['pt']
+            weight = h5file.get('fat_jet')['mcEventWeight']
+            assert pt is not None
+            assert weight is not None
+            if hist is None:
+                hist = np.histogram(pt, edges, weights=weight)[0]
+            else:
+                hist += np.histogram(pt, edges, weights=weight)[0]
+    assert hist is not None
     return hist
 
 def get_hist_reweighted(ds, edges, ratio):
-    hist = 0
+    hist = None
     for fpath in glob('%s/*.h5'%ds):
         with File(fpath,'r') as h5file:
             pt = h5file['fat_jet']['pt']
             indices = np.digitize(pt, edges) - 1
             weight = ratio[indices]
-            hist += np.histogram(pt, edges, weights=weight)[0]
+            assert len(pt[pt<0]) == 0, pt[pt<0] # no negative pt
+            if hist is None:
+                hist = np.histogram(pt, edges, weights=weight)[0]
+            else:
+                hist += np.histogram(pt, edges, weights=weight)[0]
+    assert hist is not None
     return hist
 
 
@@ -115,7 +126,7 @@ def run_higgs(edges, args):
         dsid = get_dsid(ds)
         if not is_dihiggs(dsid):
             continue
-
+        print("Current dataset is higgs in run_higgs", dsid)
         this_dsid = get_hist(ds, edges)
         parts[dsid] = np.array(this_dsid)
         hist += this_dsid
@@ -142,7 +153,7 @@ def run_higgs_reweighted(edges, args):
         this_dsid = get_hist_reweighted(ds, edges, ratio)
         parts[dsid] = np.array(this_dsid)
         hist += this_dsid
-
+    print("about to draw higgs_reweight.pdf")
     draw_hist(hist, edges, args.out_dir, parts, file_name='higgs_reweight.pdf')
 
 def run_ditop(edges, args):
@@ -152,7 +163,7 @@ def run_ditop(edges, args):
         dsid = get_dsid(ds)
         if not is_ditop(dsid):
             continue
-
+        print("Current dataset is top in run_ditop", dsid)
         this_dsid = get_hist(ds, edges)
         parts[dsid] = np.array(this_dsid)
         hist += this_dsid
@@ -183,17 +194,18 @@ def run_ditop_reweighted(edges, args):
     draw_hist(hist, edges, args.out_dir, parts, file_name='ditop_reweight.pdf')
 
 def run_wz(edges, args):
-    hist = 0 
+    hist = 0
     parts = {}
     for ds in args.datasets:
         dsid = get_dsid(ds)
-        if not is_ditop(dsid):
+        if not is_wz(dsid):
             continue
-
+        print("Current dataset is wz in run_wz", dsid)
         this_dsid = get_hist(ds, edges)
-        parts[dsid] = np.array(this_dsid)
-        hist += this_dsid
-
+        if this_dsid is not None:
+            parts[dsid] = np.array(this_dsid)
+            hist += this_dsid
+    print(hist)
     draw_hist(hist, edges, args.out_dir, parts, file_name='wz.pdf')
     save_hist(hist, edges, args.out_dir, 'jetpt.h5', 'wz')
 
@@ -210,9 +222,9 @@ def run_wz_reweighted(edges, args):
         np.save("images/wz_ratio.npy", ratio)
     for ds in args.datasets:
         dsid = get_dsid(ds)
-        if not is_ditop(dsid):
+        if not is_wz(dsid):
             continue
-        print("Current dataset is wz", dsid)
+        print("Current dataset is wz (reweighted)", dsid)
         this_dsid = get_hist_reweighted(ds, edges, ratio)
         parts[dsid] = np.array(this_dsid)
         hist += this_dsid
